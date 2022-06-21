@@ -1,20 +1,17 @@
-FROM python:3.8
-MAINTAINER Waste Watcher
+FROM ubuntu:16.04
 
-ENV MICRO_SERVICE=/home/app/webapp
-# set work directory
-RUN mkdir -p $MICRO_SERVICE
-# where your code lives
-WORKDIR $MICRO_SERVICE
+MAINTANER Your Name "youremail@domain.tld"
 
-# set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+RUN apt-get update -y && \
+    apt-get install -y python-pip python-dev
 
-# install dependencies
-RUN pip install --upgrade pip
-# copy project
-COPY src/ $MICRO_SERVICE
+COPY ./src/ /app
+
+WORKDIR /app
+
 RUN pip install -r requirements.txt
-EXPOSE 8501
-CMD streamlit run app.py
+
+
+ENTRYPOINT [ "python" ]
+
+CMD [ "app.py" ]
