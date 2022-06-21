@@ -1,16 +1,15 @@
-FROM ubuntu:16.04
+FROM python:3.8-alpine
 
 MAINTAINER Waste Watcher
 
-RUN apt-get update -y && \
-    apt-get install -y python-pip python-dev
+COPY ./src/requirements.txt /app/requirements.txt
 
-COPY ./src/ /app
 
 WORKDIR /app
-
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
+COPY ./src/ /app
 
 ENTRYPOINT [ "python" ]
 
