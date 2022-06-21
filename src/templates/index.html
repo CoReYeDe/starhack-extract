@@ -4,11 +4,61 @@
 <head>
     <meta charset="UTF-8">
     <title>Flask Docker</title>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">    
+    
+    <script language="javascript" type="text/javascript">
+        
+        function objectEquals(x, y) {
+            'use strict';
+
+            if (x === null || x === undefined || y === null || y === undefined) { return x === y; }
+            // after this just checking type of one would be enough
+            if (x.constructor !== y.constructor) { return false; }
+            // if they are functions, they should exactly refer to same one (because of closures)
+            if (x instanceof Function) { return x === y; }
+            // if they are regexps, they should exactly refer to same one (it is hard to better equality check on current ES)
+            if (x instanceof RegExp) { return x === y; }
+            if (x === y || x.valueOf() === y.valueOf()) { return true; }
+            if (Array.isArray(x) && x.length !== y.length) { return false; }
+
+            // if they are dates, they must had equal valueOf
+            if (x instanceof Date) { return false; }
+
+            // if they are strictly equal, they both need to be object at least
+            if (!(x instanceof Object)) { return false; }
+            if (!(y instanceof Object)) { return false; }
+
+            // recursive object equality check
+            var p = Object.keys(x);
+            return Object.keys(y).every(function (i) { return p.indexOf(i) !== -1; }) &&
+                p.every(function (i) { return objectEquals(x[i], y[i]); });
+        }        
+        
+        const socket = new WebSocket('ws://' + location.host + '/api/v1/queries');
+        var prevQuery = {}
+        
+        socket.onmessage = function (event) {
+            console.log(event.data);
+            query = JSON.parse(event.data)
+
+            // update
+            if (!objectEquals(prevQuery, query)) {
+                document.getElementById("myDIV").innerHTML += query.productName + "<br>";
+                prevQuery = query
+            }
+        }
+    </script> 
 </head>
 <body>
+
+    <div class="grid" id="myDIV">
+    </div>
+
     <h1>This is a Flask App containerised with Docker</h1>
     <a>https://starhack-extra-prod-starhack-4zf1nw.mo2.mogenius.io/api/v1/getPayback</a>
     <a>https://starhack-extra-prod-starhack-4zf1nw.mo2.mogenius.io/api/v1/echo</a>
     <a>https://starhack-extra-prod-starhack-4zf1nw.mo2.mogenius.io/api/v1/getDB</a>
+
 </body>
 </html>

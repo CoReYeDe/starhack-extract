@@ -1,14 +1,21 @@
 from flask import Flask, render_template, request, jsonify, Response
+from flask_sock import Sock
 from pysondb import db
 import os
+import json
+import time
 from datetime import datetime, date, timedelta
 
 app = Flask(__name__)
+sock = Sock(app)
+
+
 jsondb=db.getDb("db.json")
 
+# queries
+queries = {}
+
 def days_between(d1, d2):
-    #d1 = datetime.strptime(d1, "%Y-%m-%d")
-    #d2 = datetime.strptime(d2, "%Y-%m-%d")
     return abs((d2 - d1).days)
 
 def initializeDB():
@@ -32,6 +39,7 @@ def calculatePaybackPoints():
     #   "marketCode": 21,
     #   "articleNumber": 12444
     # }
+    global queries
     
     articleNumber = request.json["articleNumber"]
     articleMHD = request.json["mhd"]
@@ -58,7 +66,8 @@ def calculatePaybackPoints():
 
         elif MHDLeftDays <= article['PaybackMinAge']:
             returnPaybackPoints = (article['PaybackMinAge'] - MHDLeftDays) * article['PaybackPerDay']
-                
+            
+            # result
             res = {
                 'paybackPoints': returnPaybackPoints,
                 'productName': article['productName'],
@@ -66,6 +75,9 @@ def calculatePaybackPoints():
                 'mhdLeftDays': MHDLeftDays,
                 'info': 'MHD not reached - minAge reached - get Payback'
             }
+
+            # update queries state
+            queries = res
             
             return jsonify(res)
         else:
@@ -76,6 +88,9 @@ def calculatePaybackPoints():
                 'mhdLeftDays': MHDLeftDays,
                 'info': 'MHD not reached - minAge not reached - no Payback'
             }
+
+            # update queries state
+            queries = res
             
             return jsonify(res)
 
@@ -94,7 +109,7 @@ def calculatePaybackPoints():
     
 
 @app.route('/api/v1/echo', methods=['POST'])
-def echo():
+def echo2():
    return jsonify(request.json)
 
 @app.route('/api/v1/getDB', methods=['GET'])
@@ -102,8 +117,16 @@ def getDB():
      return jsonify(jsondb.getAll())
 
 
-
-
+@sock.route('/api/v1/queries')
+def echo(ws):
+    while True:
+        ws.send(json.dumps(queries))
+        updatepage()
+        time.sleep(1)
+        
+def updatepage():
+    global queries
+    return render_template("index.html", debug=json.dumps(queries))
 
 if __name__ == "__main__":
     # if app.run debug=True - initializeDB run twice
