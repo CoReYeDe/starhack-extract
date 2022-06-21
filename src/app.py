@@ -12,12 +12,12 @@ def days_between(d1, d2):
     return abs((d2 - d1).days)
 
 def initializeDB():
-    jsondb.add({"internalID": 1, "articleNumber": "1337-1", "productName": "Hack-Kekse", "PaybackPerDay": 10, "PaybackMinAge": 7})
-    jsondb.add({"internalID": 2, "articleNumber": "1337-2", "productName": "Fritz-Cola", "PaybackPerDay": 10, "PaybackMinAge": 7})
-    jsondb.add({"internalID": 3, "articleNumber": "1337-3", "productName": "Clubmate", "PaybackPerDay": 10, "PaybackMinAge": 7})
+    jsondb.add({"internalID": 1, "articleNumber": "1337-1", "productName": "Hack-Kekse", "PaybackPerDay": 10, "PaybackMinAge": 14})
+    jsondb.add({"internalID": 2, "articleNumber": "1337-2", "productName": "Fritz-Cola", "PaybackPerDay": 10, "PaybackMinAge": 5})
+    jsondb.add({"internalID": 3, "articleNumber": "1337-3", "productName": "Clubmate", "PaybackPerDay": 10, "PaybackMinAge": 5})
     jsondb.add({"internalID": 4, "articleNumber": "1337-4", "productName": "Computerchips", "PaybackPerDay": 10, "PaybackMinAge": 7})
-    jsondb.add({"internalID": 5, "articleNumber": "1337-5", "productName": "Schoko-RAM-Riegel Zartbitter-Nuss", "PaybackPerDay": 10, "PaybackMinAge": 7})
-    jsondb.add({"internalID": 6, "articleNumber": "1337-6", "productName": "SATA-Schnitten", "PaybackPerDay": 10, "PaybackMinAge": 7})
+    jsondb.add({"internalID": 5, "articleNumber": "1337-5", "productName": "Schoko-RAM-Riegel Zartbitter-Nuss", "PaybackPerDay": 10, "PaybackMinAge": 4})
+    jsondb.add({"internalID": 6, "articleNumber": "1337-6", "productName": "SATA-Schnitten", "PaybackPerDay": 10, "PaybackMinAge": 14})
 
 @app.route('/')
 def home():
@@ -46,10 +46,15 @@ def calculatePaybackPoints():
 
         if mhd < date.today():
 
-            return Response(
-                "MHD reached",
-                status=400,
-            )
+            res = {
+                'paybackPoints': 0,
+                'productName': article['productName'],
+                'mhd': str(mhd),
+                'mhdLeftDays': 0,
+                'info': 'MHD reached - no Payback'
+            }
+            
+            return jsonify(res)
 
         elif MHDLeftDays <= article['PaybackMinAge']:
             returnPaybackPoints = (article['PaybackMinAge'] - MHDLeftDays) * article['PaybackPerDay']
@@ -58,15 +63,21 @@ def calculatePaybackPoints():
                 'paybackPoints': returnPaybackPoints,
                 'productName': article['productName'],
                 'mhd': str(mhd),
-                'mhdLeftDays': MHDLeftDays
+                'mhdLeftDays': MHDLeftDays,
+                'info': 'MHD not reached - minAge reached - get Payback'
             }
             
             return jsonify(res)
         else:
-            return Response(
-                "Earntime not reached",
-                status=400,
-            )
+            res = {
+                'paybackPoints': 0,
+                'productName': article['productName'],
+                'mhd': str(mhd),
+                'mhdLeftDays': MHDLeftDays,
+                'info': 'MHD not reached - minAge not reached - no Payback'
+            }
+            
+            return jsonify(res)
 
         #return jsonify(dbSearchResult[0])
     elif len(dbSearchResult) > 1:
@@ -77,7 +88,7 @@ def calculatePaybackPoints():
     else:
         return Response(
             "Article not found",
-            status=400,
+            status=404,
         )
 
     
