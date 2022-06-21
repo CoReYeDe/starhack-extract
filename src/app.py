@@ -6,3 +6,13 @@ initial = 'Test'
 
 # perform cashflow projections for the next 5 years
 st.write(f'This is a {initial}')
+
+st.json({
+
+    'app':'scan',
+
+    'backend': 'extract',
+
+    'return' : 'json'
+
+})
