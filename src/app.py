@@ -18,13 +18,14 @@ queries = {}
 def days_between(d1, d2):
     return abs((d2 - d1).days)
 
-def initializeDB():
-    jsondb.add({"internalID": 1, "articleNumber": "1337-1", "productName": "Hack-Kekse", "PaybackPerDay": 10, "PaybackMinAge": 14})
-    jsondb.add({"internalID": 2, "articleNumber": "1337-2", "productName": "Fritz-Cola", "PaybackPerDay": 10, "PaybackMinAge": 5})
-    jsondb.add({"internalID": 3, "articleNumber": "1337-3", "productName": "Clubmate", "PaybackPerDay": 10, "PaybackMinAge": 5})
-    jsondb.add({"internalID": 4, "articleNumber": "1337-4", "productName": "Computerchips", "PaybackPerDay": 10, "PaybackMinAge": 7})
-    jsondb.add({"internalID": 5, "articleNumber": "1337-5", "productName": "Schoko-RAM-Riegel Zartbitter-Nuss", "PaybackPerDay": 10, "PaybackMinAge": 4})
-    jsondb.add({"internalID": 6, "articleNumber": "1337-6", "productName": "SATA-Schnitten", "PaybackPerDay": 10, "PaybackMinAge": 14})
+def initializeDB():#
+    pass
+    #jsondb.add({"internalID": 1, "articleNumber": "1337-1", "productName": "Hack-Kekse", "PaybackPerDay": 10, "PaybackMinAge": 14})
+    #jsondb.add({"internalID": 2, "articleNumber": "1337-2", "productName": "Fritz-Cola", "PaybackPerDay": 10, "PaybackMinAge": 5})
+    #jsondb.add({"internalID": 3, "articleNumber": "1337-3", "productName": "Clubmate", "PaybackPerDay": 10, "PaybackMinAge": 5})
+    #jsondb.add({"internalID": 4, "articleNumber": "1337-4", "productName": "Computerchips", "PaybackPerDay": 10, "PaybackMinAge": 7})
+    #jsondb.add({"internalID": 5, "articleNumber": "1337-5", "productName": "Schoko-RAM-Riegel Zartbitter-Nuss", "PaybackPerDay": 10, "PaybackMinAge": 4})
+    #jsondb.add({"internalID": 6, "articleNumber": "1337-6", "productName": "SATA-Schnitten", "PaybackPerDay": 10, "PaybackMinAge": 14})
 
 @app.route('/')
 def home():
@@ -57,6 +58,7 @@ def calculatePaybackPoints():
             res = {
                 'paybackPoints': 0,
                 'productName': article['productName'],
+                'imageUrl': article['imageUrl'],
                 'mhd': str(mhd),
                 'mhdLeftDays': 0,
                 'info': 'MHD reached - no Payback'
@@ -71,6 +73,7 @@ def calculatePaybackPoints():
             res = {
                 'paybackPoints': returnPaybackPoints,
                 'productName': article['productName'],
+                'imageUrl': article['imageUrl'],
                 'mhd': str(mhd),
                 'mhdLeftDays': MHDLeftDays,
                 'info': 'MHD not reached - minAge reached - get Payback'
@@ -84,6 +87,7 @@ def calculatePaybackPoints():
             res = {
                 'paybackPoints': 0,
                 'productName': article['productName'],
+                'imageUrl': article['imageUrl'],
                 'mhd': str(mhd),
                 'mhdLeftDays': MHDLeftDays,
                 'info': 'MHD not reached - minAge not reached - no Payback'
@@ -121,13 +125,8 @@ def getDB():
 def echo(ws):
     while True:
         ws.send(json.dumps(queries))
-        updatepage()
         time.sleep(1)
         
-def updatepage():
-    global queries
-    return render_template("index.html", debug=json.dumps(queries))
-
 if __name__ == "__main__":
     # if app.run debug=True - initializeDB run twice
     date.today()
