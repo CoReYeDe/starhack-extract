@@ -36,7 +36,7 @@ def calculatePaybackPoints():
     # {
     #   "id": "1655801622",
     #   "userId": 1337,
-    #   "mhd": "23-06-2022",
+    #   "mhd": "2022-06-23",
     #   "marketCode": 21,
     #   "articleNumber": 12444
     # }
@@ -120,6 +120,14 @@ def echo2():
 def getDB():
      return jsonify(jsondb.getAll())
 
+@app.route('/api/v1/clear', methods=['GET'])
+def clearQueries():
+    global queries
+    queries = {}
+    return Response(
+        "cleared",
+        status=200
+    )
 
 @sock.route('/api/v1/queries')
 def echo(ws):
