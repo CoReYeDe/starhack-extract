@@ -1,5 +1,6 @@
 {"data": [
     {"articleNumber": "1337-1", "productName": "Hack-Kekse", "imageUrl": "https://img.rewe-static.de/8101652/28862085_digital-image.png", "PaybackPerDay": 10, "PaybackMinAge": 14},
     {"articleNumber": "23878037", "productName": "Naturgut Bio Agaven Dicksaft", "imageUrl": "https://img.rewe-static.de/0908716/23474026_digital-image.png" ,"PaybackPerDay": 10, "PaybackMinAge": 180},
-    {"articleNumber": "4337256071598", "productName": "REWE Feine Welt Pesto Trüffel 190g", "imageUrl": "https://img.rewe-static.de/7994248/31202497_digital-image.png" ,"PaybackPerDay": 10, "PaybackMinAge": 180}
+    {"articleNumber": "4337256071598", "productName": "REWE Feine Welt Pesto Trüffel 190g", "imageUrl": "https://img.rewe-static.de/7994248/31202497_digital-image.png" ,"PaybackPerDay": 10, "PaybackMinAge": 180},
+    {"articleNumber": "4337256075886", "productName": "REWE Feine Welt Pesto Pistazie 190g", "imageUrl": "https://img.rewe-static.de/7991838/31887763_digital-image.png" ,"PaybackPerDay": 10, "PaybackMinAge": 180}
 ]}
